@@ -6,7 +6,7 @@ from .page import Page
 from .events import EventManager
 from .theme import Theme, default_theme
 
-from . import components
+from . import core
 
 class Photon:
     def __init__(self, screenX:int=120, screenY:int=28, preventExit:bool=False, theme:Theme=default_theme):
@@ -16,6 +16,7 @@ class Photon:
         
         self.pages = []
         self.page = None
+        self.sc = None
         
         self.running = True
         self.em = EventManager()
@@ -25,7 +26,7 @@ class Photon:
         if type(theme) != Theme:
             raise TypeError("theme must be an instance of photon.Theme")
         
-        components.theme = theme
+        core.theme = theme
     
     def run(self):
         if threading.current_thread() != threading.main_thread():
@@ -53,9 +54,10 @@ class Photon:
         
     def renderloop(self, sc):
         self.em.call("on_init")
+        self.sc = sc
         
         curses.start_color()
-        components.theme.apply()
+        core.theme.apply()
         
         while self.running:
             self.em.call("on_render", sc)

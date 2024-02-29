@@ -1,3 +1,3 @@
-from ..theme import Theme, default_theme
+from . import modal
 
-theme = default_theme
+Modal = modal.Modal
