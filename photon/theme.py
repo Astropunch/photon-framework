@@ -20,6 +20,9 @@ class Theme:
         self.ERROR = 7
         self.ERROR_BG = 8
         
+        self.DEFAULT = 9
+        self.DEFAULT_BG = 10
+        
     def apply(self):
         # Primary
         curses.init_pair(self.PRIMARY, self.primary, Colors.BLACK)
@@ -37,6 +40,10 @@ class Theme:
         curses.init_pair(self.ERROR, self.error, Colors.BLACK)        
         curses.init_pair(self.ERROR_BG, Colors.BLACK, self.error)
         
+        # Default
+        curses.init_pair(self.DEFAULT, Colors.WHITE, Colors.BLACK)
+        curses.init_pair(self.DEFAULT_BG, Colors.BLACK, Colors.WHITE)
+        
     def get_colors(self, variant):
         match variant:
             case Variants.PRIMARY:
@@ -48,9 +55,10 @@ class Theme:
             case Variants.ERROR:
                 return (self.ERROR, self.ERROR_BG)
             case _:
-                return (self.PRIMARY, self.PRIMARY_BG)
+                return (self.DEFAULT, self.DEFAULT_BG)
          
 class Variants:
+    DEFAULT = "default"
     PRIMARY = "primary"
     SUCCESS = "success"
     WARNING = "warning"

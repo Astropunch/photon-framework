@@ -27,6 +27,8 @@ class Input(Page):
         
     def on_render(self, sc):
         
+        curses.curs_set(1)
+        
         #normal input
         ##############
         # Hello_____ #
@@ -91,6 +93,7 @@ class Input(Page):
         if key == "enter":
             if self.call_on_finish:
                 self.call_on_finish(self.value)
+                curses.curs_set(0)
         
         if len(key) == 1:
             self.value += key

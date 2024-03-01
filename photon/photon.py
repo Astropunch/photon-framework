@@ -1,4 +1,5 @@
 import os
+import time
 import curses
 import threading
 
@@ -9,14 +10,16 @@ from .theme import Theme, default_theme
 from . import core
 
 class Photon:
-    def __init__(self, screenX:int=120, screenY:int=28, preventExit:bool=False, theme:Theme=default_theme):
+    def __init__(self, screenX:int=120, screenY:int=28, root:Page=None, preventExit:bool=False, theme:Theme=default_theme):
         self.screenX = screenX
         self.screenY = screenY
         self.preventExit = preventExit
         
         self.pages = []
         self.page = None
+        self.root = root(self) if root else None
         self.sc = None
+        self.fps = 0
         
         self.running = True
         self.em = EventManager()
@@ -59,9 +62,19 @@ class Photon:
         curses.start_color()
         core.theme.apply()
         
+        curses.curs_set(0)
+        
+        fps_data = {
+            "slice": 0,
+            "frames": 0,
+        }
+        
         while self.running:
             self.em.call("on_render", sc)
             sc.erase()
+            
+            if type(self.root).__base__ == Page:
+                self.root.on_render(sc)
             
             try:
                 if type(self.page).__base__ == Page:
@@ -70,6 +83,13 @@ class Photon:
                     sc.addstr(0, 0, "RENDER ERROR: page must be an instance of photon.Page")
             except Exception as e:
                 sc.addstr(0, 0, f"RENDER ERROR: {e}")
+            
+            fps_data["frames"] += 1
+            if time.time() - fps_data["slice"] > 1:
+                self.fps = fps_data["frames"]
+                fps_data["frames"] = 0
+                fps_data["slice"] = time.time()
+            
             
             sc.refresh()
            
