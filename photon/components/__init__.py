@@ -1,5 +1,4 @@
-from . import (modal, input, text)
-
-Modal = modal.Modal
-Input = input.Input
-Text = text.Text
+from .modal import Modal
+from .input import Input
+from .text import Text
+from .slider import Slider

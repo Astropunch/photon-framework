@@ -5,7 +5,7 @@ from .. import utils
 
 import curses
 
-class Modal:
+class Modal(Page):
     def __init__(self, app, title = "", content = "", variant:Variants = Variants.PRIMARY, auto_render = True):
         self.app = app
         
