@@ -1,2 +1,2 @@
-# photon-framework
+# PhotonUI Framework
 Command Line Interface Framework for Python
