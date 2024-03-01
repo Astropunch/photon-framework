@@ -1,17 +1,22 @@
 from ..page import Page
-from ..core import theme
 from ..theme import Variants
+from ..core import theme
 from .. import utils
+from ..keymap import get_key
 
 import curses
 
-class Modal:
-    def __init__(self, app, title = "", content = "", variant:Variants = Variants.PRIMARY, auto_render = True):
+class Input(Page):
+    def __init__(self, app, title, variant:Variants = Variants.PRIMARY, width: int=30, auto_render = True):
         self.app = app
-        
-        self.title = title if title else "Modal"
-        self.content = content if content else "This is a modal."
+        self.title = title if title else "Input"
         self.variant = variant
+        self.width = width
+        
+        self.value = ""
+        self.render_value = ""
+        
+        self.call_on_finish = None
         
         if not auto_render: return
         
@@ -19,24 +24,40 @@ class Modal:
             raise Exception("App screen is not initialized.")
         
         self.on_render(app.sc)
-    
         
     def on_render(self, sc):
-        ###] Modal [################
-        # This is a modal.         #
-        ############################
+        
+        #normal input
+        ##############
+        # Hello_____ #
+        ##############
+        
+        #overflow
+        ##############
+        # ...o World #
+        ##############
         
         primary_bg = theme.get_colors(self.variant)[1]
         
+        if len(self.value) == 0:
+            self.render_value = "_" * (self.width-4)
+        elif len(self.value) > self.width-4:
+            self.render_value = "..." + self.value[-(self.width-7):]
+        else:
+            self.render_value = self.value + "_" * (self.width-4-len(self.value))
+        
         #get start of the Y axis
-        sizeY = len(self.content.splitlines()) + 2
+        sizeY = 3
         y = utils.centerY(self.app, sizeY)
         
         #get start of the X axis
         maxX = 0
-        for ln in self.content.splitlines() + [self.title]:
+        for ln in [self.render_value, self.title]:
             maxX = len(ln) if len(ln) > maxX else maxX
         maxX += 4
+        
+        if maxX < self.width:
+            maxX = self.width
         
         x = utils.centerX(self.app, maxX)
         
@@ -58,11 +79,22 @@ class Modal:
         sc.addstr(y, utils.centerTextX(self.app, title), title, curses.color_pair(primary_bg))
         
         #draw the content
-        for i, ln in enumerate(self.content.splitlines()):
-            sc.addstr(y + 1 + i, utils.centerTextX(self.app, ln), ln, curses.color_pair(primary_bg))
-        
+        sc.addstr(y + 1, x+2, self.render_value, curses.color_pair(primary_bg))
+    
     def on_input(self, key):
-        return
+        key = get_key(key)
         
+        if key == "backspace":
+            self.value = self.value[:-1]
+            return
         
+        if key == "enter":
+            if self.call_on_finish:
+                self.call_on_finish(self.value)
         
+        if len(key) == 1:
+            self.value += key
+            return
+        
+    def on_finish(self, func: callable):
+        self.call_on_finish = func

@@ -36,8 +36,25 @@ class Theme:
         # Error
         curses.init_pair(self.ERROR, self.error, Colors.BLACK)        
         curses.init_pair(self.ERROR_BG, Colors.BLACK, self.error)
+        
+    def get_colors(self, variant):
+        match variant:
+            case Variants.PRIMARY:
+                return (self.PRIMARY, self.PRIMARY_BG)
+            case Variants.SUCCESS:
+                return (self.SUCCESS, self.SUCCESS_BG)
+            case Variants.WARNING:
+                return (self.WARNING, self.WARNING_BG)
+            case Variants.ERROR:
+                return (self.ERROR, self.ERROR_BG)
+            case _:
+                return (self.PRIMARY, self.PRIMARY_BG)
          
-
+class Variants:
+    PRIMARY = "primary"
+    SUCCESS = "success"
+    WARNING = "warning"
+    ERROR = "error"
 
 class Colors:
     WHITE = curses.COLOR_WHITE

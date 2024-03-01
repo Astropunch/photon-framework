@@ -1,3 +1,4 @@
-from . import modal
+from . import (modal, input)
 
 Modal = modal.Modal
+Input = input.Input
