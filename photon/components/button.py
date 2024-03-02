@@ -6,8 +6,8 @@ from .. import utils
 
 import curses
 
-class Button:
-    def __init__(self, app, text = None, x = None, y = None, variant: Variants = Variants.DEFAULT, on_click: callable = None, auto_render = True):
+class Button(Page):
+    def __init__(self, app, text = None, x = None, y = None, variant: Variants = Variants.PRIMARY, on_click: callable = None, auto_render = True):
         self.app = app
         self.text = text
         self.x = x

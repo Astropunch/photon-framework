@@ -10,7 +10,7 @@ from .theme import Theme, default_theme
 from . import core
 
 class Photon:
-    def __init__(self, screenX:int=120, screenY:int=28, root:Page=None, preventExit:bool=False, theme:Theme=default_theme):
+    def __init__(self, screenX:int=120, screenY:int=28, root:Page=None, maxFps: int = None, preventExit:bool=False, theme:Theme=default_theme):
         self.screenX = screenX
         self.screenY = screenY
         self.preventExit = preventExit
@@ -20,6 +20,8 @@ class Photon:
         self.root = root(self) if root else None
         self.sc = None
         self.fps = 0
+        
+        self.delay = 1/maxFps if maxFps else 0
         
         self.running = True
         self.em = EventManager()
@@ -70,12 +72,15 @@ class Photon:
         }
         
         while self.running:
+            #reset screen
             self.em.call("on_render", sc)
             sc.erase()
             
+            #render root
             if type(self.root).__base__ == Page:
                 self.root.on_render(sc)
             
+            #render page
             try:
                 if type(self.page).__base__ == Page:
                     self.page.on_render(sc)
@@ -84,13 +89,18 @@ class Photon:
             except Exception as e:
                 sc.addstr(0, 0, f"RENDER ERROR: {e}")
             
+            #calculate fps
             fps_data["frames"] += 1
             if time.time() - fps_data["slice"] > 1:
                 self.fps = fps_data["frames"]
                 fps_data["frames"] = 0
                 fps_data["slice"] = time.time()
             
+            #fps limiter
+            if self.delay:
+                time.sleep(self.delay)
             
+            #update
             sc.refresh()
            
     #KEY LISTENERS -----------------

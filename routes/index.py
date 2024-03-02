@@ -3,29 +3,33 @@ import os
 import curses
 import time
 
-from photon.components import Modal, Input, Text, Slider, Checkbox, SlideToggle, Enum
+from photon.components import Modal, Input, Text, Slider, Checkbox, SlideToggle, Enum, Button
 from photon.core import theme
 from photon.theme import Variants
 from photon.keymap import get_key
 
-#TODO: Table, Sidebar, App Shell, Spinner/Loader, Navbar, Button
+#TODO: Table, Sidebar, App Shell, Spinner/Loader, Navbar
+
 class Index(photon.Page):
     def __init__(self, app):
         self.app = app
-        self.__key__ = 1
+        self.key = 1
         
-        self.start = time.time()
+        self.btn = Button(self.app, "Open Modal", on_click=self.open_modal, auto_render=False) 
+        self.modal = False
         
-        self.enum = Enum(self.app, values=["Hello", "World", "This", "Is", "A", "Test"], y=10, selected=0, variant=Variants.PRIMARY, reverse=True, auto_render=False)
-    
     def on_render(self, sc):
-        Text(self.app, f"FPS: {self.app.fps}", y=12, variant=Variants.PRIMARY)
-        Slider(self.app, value=self.app.fps, max=150_000, width=110, border=False, char_pre="-", variant=Variants.PRIMARY, reverse=True)
+        self.btn.on_render(sc)
         
-        self.enum.on_render(sc)
-        
+        if self.modal:
+            Modal(self.app, "Hello World", "This is a modal window.\nPress 'q' to close.", auto_render=True)
         
     def on_input(self, key):
-        self.__key__ = key
+        self.key = key
+        self.btn.on_input(key)
         
-        self.enum.on_input(key)
+        if get_key(key) == "q":
+            self.modal = False
+        
+    def open_modal(self):
+        self.modal = True

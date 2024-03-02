@@ -6,7 +6,7 @@ from .. import utils
 
 import curses
 
-class SlideToggle:
+class SlideToggle(Page):
     def __init__(self, app, x = None, y = None, checked = False, enabled:Variants = Variants.SUCCESS, disabled:Variants = Variants.ERROR,
                  char:str = "@", auto_render = True):
         self.app = app 

@@ -5,3 +5,4 @@ from .slider import Slider
 from .checkbox import Checkbox
 from .slidetoggle import SlideToggle
 from .enum import Enum
+from .button import Button

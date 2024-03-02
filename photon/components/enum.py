@@ -6,7 +6,7 @@ from .. import utils
 
 import curses
 
-class Enum:
+class Enum(Page):
     def __init__(self, app, values: list = [], x = None, y = None, selected = 0, variant:Variants = Variants.DEFAULT, loop:bool = True,
                  reverse = False, callback: callable = None, auto_render = True):
         self.app = app
