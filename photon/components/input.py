@@ -7,7 +7,8 @@ from ..keymap import get_key
 import curses
 
 class Input(Page):
-    def __init__(self, app, title, variant:Variants = Variants.PRIMARY, width: int=30, auto_render = True):
+    def __init__(self, app, title, variant:Variants = Variants.PRIMARY, width: int=30,
+                 callback: callable = None, auto_render = True):
         self.app = app
         self.title = title if title else "Input"
         self.variant = variant
@@ -16,7 +17,7 @@ class Input(Page):
         self.value = ""
         self.render_value = ""
         
-        self.call_on_finish = None
+        self.callback = callback
         
         if not auto_render: return
         
@@ -91,8 +92,8 @@ class Input(Page):
             return
         
         if key == "enter":
-            if self.call_on_finish:
-                self.call_on_finish(self.value)
+            if self.callback:
+                self.callback(self.value)
                 curses.curs_set(0)
         
         if len(key) == 1:
@@ -100,4 +101,4 @@ class Input(Page):
             return
         
     def on_finish(self, func: callable):
-        self.call_on_finish = func
+        self.callback = func

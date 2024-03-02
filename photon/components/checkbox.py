@@ -11,7 +11,7 @@ class Checkbox:
         self.app = app 
         
         self.text = text if text else ""
-        self.x = x if x != None else utils.centerX(app, len(text) + 4)
+        self.x = x if x != None else utils.centerX(app, len(self.text) + 4)
         self.y = y if y != None else utils.centerY(app, 1)
         
         self.checked = checked

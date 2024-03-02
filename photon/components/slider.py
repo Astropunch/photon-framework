@@ -45,7 +45,6 @@ class Slider(Page):
         percentage_empty = self.width - percentage_full
         
         
-        
         if self.border:
             bar = f"[{self.char_pre * percentage_full}{self.char_point}{self.char_post * percentage_empty}]"
         else:
