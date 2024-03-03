@@ -6,6 +6,8 @@ from routes import index, root
 
 app = photon.Photon(root=root.Root)
 
+
+
 PAGES = [index.Index(app)]
 
 for page in PAGES:

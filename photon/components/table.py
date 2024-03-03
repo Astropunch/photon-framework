@@ -14,7 +14,8 @@ class TableRow:
         return max([len(str(x)) for x in self.values])
 
 class Table(Page):
-    def __init__(self, app, x = None, y = None, sizeY = 10, headers = [], rows:list[TableRow] = [], selected: int = None, variant:Variants = Variants.DEFAULT, auto_render = True):
+    def __init__(self, app, x = None, y = None, sizeY = 10, headers = [], rows:list[TableRow] = [], selected: int = None, variant:Variants = Variants.DEFAULT,
+                 on_click:callable=None, auto_render = True):
         self.app = app
         
         self.x = x
@@ -26,6 +27,7 @@ class Table(Page):
         self.selected = selected
         
         self.variant = variant
+        self.callback = on_click
         
         for row in self.rows:
             if type(row) != TableRow:
@@ -51,8 +53,41 @@ class Table(Page):
                     max_sizes[i] = size
                     
                 #  row sizes   &  space between rows
-        sizeX = sum(max_sizes) + len(max_sizes) - 1    
-        sizeY = self.sizeY if self.sizeY + self.y < self.app.screenY else self.app.screenY - self.y
+        sizeX = sum(max_sizes) + (len(max_sizes)*2) - 1    
+        sizeY = self.sizeY if self.sizeY else self.app.screenY - 4
         
         #WIP - add scroll, rendering only visible rows
         
+        startX = self.x if self.x else utils.centerX(self.app, sizeX)
+        startY = self.y if self.y else utils.centerY(self.app, sizeY)
+        
+        #draw headers
+        headerX = startX
+        for i, header in enumerate(self.headers):
+            sc.addstr(startY, headerX, str(header).ljust(max_sizes[i]), curses.color_pair(bg))
+            headerX += max_sizes[i] + 2
+            
+        #draw rows
+        for i, row in enumerate(self.rows):
+            if i >= self.sizeY: break
+            rowY = startY + i + 2
+            rowX = startX
+            for j, value in enumerate(row.values):
+                sc.addstr(rowY, rowX, str(value).ljust(max_sizes[j]), curses.color_pair(bg if i == self.selected else fg))
+                rowX += max_sizes[j] + 2
+                
+    def on_input(self, key):
+        if get_key(key) in ["enter", " "]:
+            if self.callback:
+                self.callback(self.selected, self.rows[self.selected])
+              
+        if self.selected != None:  
+            if get_key(key) == "down":
+                self.selected += 1
+                if self.selected >= len(self.rows):
+                    self.selected = 0
+            
+            if get_key(key) == "up":
+                self.selected -= 1
+                if self.selected < 0:
+                    self.selected = len(self.rows) - 1
