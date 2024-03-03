@@ -9,3 +9,4 @@ from .button import Button
 from .table import Table, TableRow
 from .spinner import Spinner
 from .navbar import NavBar, NavTab
+from .sidebar import SideBar, SideBarRow

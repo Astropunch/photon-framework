@@ -68,7 +68,7 @@ class Table(Page):
             headerX += max_sizes[i] + 2
             
         #implement scroll
-        page = self.selected // self.sizeY
+        page = self.selected if self.selected else 0 // sizeY
         visible_rows = self.rows[page * self.sizeY: (page + 1) * self.sizeY]
             
         #draw rows
