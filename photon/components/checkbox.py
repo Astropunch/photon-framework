@@ -6,7 +6,7 @@ from .. import utils
 
 import curses
 
-class Checkbox(Page):
+class CheckBox(Page):
     def __init__(self, app, text = None, x = None, y = None, checked = False, variant:Variants = Variants.DEFAULT, reverse = False, auto_render = True):
         self.app = app 
         

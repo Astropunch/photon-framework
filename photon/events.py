@@ -7,7 +7,7 @@ class EventManager:
             
             "on_render": None, #called every render loop
             "on_input": None, #called on every input
-            
+            "on_error": None, #called when an error occurs
         }
         
     def decorate(self, event:str):

@@ -29,12 +29,14 @@ class Photon:
         self.event = self.em.decorate
 
         if type(theme) != Theme:
+            self.em.call("on_error", self, "theme must be an instance of photon.Theme")
             raise TypeError("theme must be an instance of photon.Theme")
         
         core.theme = theme
     
     def run(self):
         if threading.current_thread() != threading.main_thread():
+            self.em.call("on_error", self, "Photon.run() can be only ran from the main thread")
             raise Exception("Photon.run() can be only ran from the main thread")
             
         self.listener_thread = threading.Thread(target=self.listener)
@@ -49,6 +51,7 @@ class Photon:
                     os._exit(0)
                     break
                 
+                self.em.call("on_error", self, "PreventExit is enabled, use Photon.exit() to exit the app.")
                 self.em.call("on_exit_attempt")
             
     def exit(self):
@@ -85,8 +88,10 @@ class Photon:
                 if type(self.page).__base__ == Page:
                     self.page.on_render(sc)
                 else:
+                    self.em.call("on_error", self, "RENDER ERROR: page must be an instance of photon.Page")
                     sc.addstr(0, 0, "RENDER ERROR: page must be an instance of photon.Page")
             except Exception as e:
+                self.em.call("on_error", self, f"RENDER ERROR: {e}")
                 sc.addstr(0, 0, f"RENDER ERROR: {e}")
             
             #calculate fps
@@ -113,21 +118,27 @@ class Photon:
             key = sc.getch()
             self.em.call("on_input", key)
             
-            if type(self.page).__base__ == Page:
-                self.page.on_input(key)
-            else:
-                raise UserWarning("INPUT ERROR: page must be an instance of photon.Page")
-    
+            try:
+                if type(self.page).__base__ == Page:
+                    self.page.on_input(key)
+                else:
+                    self.em.call("on_error", self, "INPUT ERROR: page must be an instance of photon.Page")
+                    raise UserWarning("INPUT ERROR: page must be an instance of photon.Page")
+            except:
+                self.em.call("on_error", self, "INPUT ERROR: page must be an instance of photon.Page")
+                
     #PAGES -----------------
             
     def register_page(self, page:Page):
         #check for type
         if type(page).__base__ != Page:
+            self.em.call("on_error", self, "page must be an instance of photon.Page")
             raise TypeError('page must be an instance of photon.Page')
 
         #check for duplicated pages
         for p in self.pages:
             if p.__class__.__name__ == page.__class__.__name__:
+                self.em.call("on_error", self, f"Page '{page.__class__.__name__}' already registered")
                 raise ValueError(f"Page '{page.__class__.__name__}' already registered")
 
         self.pages.append(page)
@@ -137,7 +148,5 @@ class Photon:
             if page.__class__.__name__ == page_name:
                 self.page = page
                 return
-            
-        raise ValueError(f"Page '{page_name}' not found")
-
-    #EVENTS -----------------
+        
+        self.em.call("on_error", self, f"Page '{page_name}' not found")
