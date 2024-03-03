@@ -73,7 +73,7 @@ KEY_MAP = {
     "330": "delete",
     "338": "page_down",
     "339": "page_up",
-    "338": "end",
+    "358": "end",
     "262": "home",
     "331": "insert",
     "9": "tab",

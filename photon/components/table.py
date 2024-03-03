@@ -67,13 +67,17 @@ class Table(Page):
             sc.addstr(startY, headerX, str(header).ljust(max_sizes[i]), curses.color_pair(bg))
             headerX += max_sizes[i] + 2
             
+        #implement scroll
+        page = self.selected // self.sizeY
+        visible_rows = self.rows[page * self.sizeY: (page + 1) * self.sizeY]
+            
         #draw rows
-        for i, row in enumerate(self.rows):
+        for i, row in enumerate(visible_rows):
             if i >= self.sizeY: break
             rowY = startY + i + 2
             rowX = startX
             for j, value in enumerate(row.values):
-                sc.addstr(rowY, rowX, str(value).ljust(max_sizes[j]), curses.color_pair(bg if i == self.selected else fg))
+                sc.addstr(rowY, rowX, str(value).ljust(max_sizes[j]), curses.color_pair(bg if row is self.rows[self.selected] else fg))
                 rowX += max_sizes[j] + 2
                 
     def on_input(self, key):
@@ -91,3 +95,18 @@ class Table(Page):
                 self.selected -= 1
                 if self.selected < 0:
                     self.selected = len(self.rows) - 1
+                    
+            if get_key(key) in ["page_down", "right"]:
+                self.selected += self.sizeY
+                if self.selected >= len(self.rows):
+                    self.selected = 0
+            
+            if get_key(key) in ["page_up", "left"]:
+                self.selected -= self.sizeY
+                if self.selected < 0:
+                    self.selected = len(self.rows) - 1
+                    
+            if get_key(key) == "home":
+                self.selected = 0
+            if get_key(key) == "end":
+                self.selected = len(self.rows) - 1
