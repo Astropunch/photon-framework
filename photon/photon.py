@@ -9,42 +9,42 @@ from .theme import Theme, default_theme
 
 from . import core
 
+
 class Photon:
-    class Photon:
-        def __init__(self, screenX:int=120, screenY:int=28, root:Page=None, maxFps: int = None, preventExit:bool=False, theme:Theme=default_theme):
-            """
-            Initializes a Photon object.
+    def __init__(self, screenX:int=120, screenY:int=28, root:Page=None, maxFps: int = None, preventExit:bool=False, theme:Theme=default_theme):
+        """
+        Initializes a Photon object.
 
-            Args:
-                screenX (int): The width of the screen in characters. Defaults to 120.
-                screenY (int): The height of the screen in characters. Defaults to 28.
-                root (Page): The root page of the application. Defaults to None.
-                maxFps (int): The maximum frames per second. Unlimited by default.
-                preventExit (bool): Whether to prevent the application from exiting. Defaults to False.
-                theme (Theme): The theme to be used for the application. Defaults to the default theme.
-            """
-            self.screenX = screenX
-            self.screenY = screenY
-            self.preventExit = preventExit
-            
-            self.pages = []
-            self.page = None
-            self.root = root(self) if root else None
-            self.sc = None
-            self.fps = 0
-            
-            self.delay = 1/maxFps if maxFps else 0
-            
-            self.running = True
-            self.em = EventManager()
-            
-            self.event = self.em.decorate
+        Args:
+            screenX (int): The width of the screen in characters. Defaults to 120.
+            screenY (int): The height of the screen in characters. Defaults to 28.
+            root (Page): The root page of the application. Defaults to None.
+            maxFps (int): The maximum frames per second. Unlimited by default.
+            preventExit (bool): Whether to prevent the application from exiting. Defaults to False.
+            theme (Theme): The theme to be used for the application. Defaults to the default theme.
+        """
+        self.screenX = screenX
+        self.screenY = screenY
+        self.preventExit = preventExit
+        
+        self.pages = []
+        self.page = None
+        self.root = root(self) if root else None
+        self.sc = None
+        self.fps = 0
+        
+        self.delay = 1/maxFps if maxFps else 0
+        
+        self.running = True
+        self.em = EventManager()
+        
+        self.event = self.em.decorate
 
-            if type(theme) != Theme:
-                self.em.call("on_error", self, "theme must be an instance of photon.Theme")
-                raise TypeError("theme must be an instance of photon.Theme")
-            
-            core.theme = theme
+        if type(theme) != Theme:
+            self.em.call("on_error", self, "theme must be an instance of photon.Theme")
+            raise TypeError("theme must be an instance of photon.Theme")
+        
+        core.theme = theme
     
     def run(self):
         if threading.current_thread() != threading.main_thread():
