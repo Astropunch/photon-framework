@@ -10,8 +10,6 @@ from photon.core import theme
 from photon.theme import Variants
 from photon.keymap import get_key
 
-#TODO: Sidebar, App Shell
-
 class Index(photon.Page):
     def __init__(self, app):
         self.app = app
@@ -23,7 +21,8 @@ class Index(photon.Page):
             SideBarRow("More", False),
             SideBarRow("About"),
             SideBarRow("Contact"),
-        ], y=1, selected=0, variant=Variants.PRIMARY, auto_render=False)
+        ], y=1, selected=0, variant=Variants.PRIMARY,
+        auto_render=False)
         
     def on_render(self, sc):        
         sc.addstr(self.app.screenY,0, f"Key: {self.key} / {get_key(self.key)}")

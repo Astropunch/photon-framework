@@ -53,7 +53,7 @@ class SideBar(Page):
             
     def on_input(self, key):
         if get_key(key) in ["enter", " "]:
-            self.callback(self.selected)
+            self.callback(self.selected, self.items[self.selected])
         
         if get_key(key) == "up":
             for _ in range(len(self.items)):
