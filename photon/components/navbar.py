@@ -13,6 +13,18 @@ class NavTab:
         self.page = page_id
 
 class NavBar(Page):
+    """
+    Represents a navigation bar component that displays a title and a list of tabs.
+    
+    Args:
+        app (Photon): The parent application object.
+        title (str): The title of the navigation bar.
+        tabs (list[NavTab], optional): The list of tabs to be displayed. Defaults to an empty list.
+        variant (Variants, optional): The variant of the navigation bar. Defaults to Variants.DEFAULT.
+        large (bool, optional): Specifies whether the navigation bar should be large. Defaults to True.
+        on_click (callable, optional): The callback function to be called when a tab is clicked. Defaults to None.
+        auto_render (bool, optional): Specifies whether the navigation bar should be automatically rendered. Defaults to True.
+    """
     def __init__(self, app, title, tabs:list[NavTab] = [], variant:Variants = Variants.DEFAULT, large:bool = True, on_click:callable = None, auto_render = True):
         self.app = app
         

@@ -7,7 +7,21 @@ from .. import utils
 import curses
 
 class CheckBox(Page):
-    def __init__(self, app, text = None, x = None, y = None, checked = False, variant:Variants = Variants.DEFAULT, reverse = False, auto_render = True):
+    """
+    Represents a checkbox component.
+
+    Args:
+        app (Photon): The parent application object.
+        text (str, optional): The text to display next to the checkbox. Defaults to None.
+        x (int, optional): The x-coordinate of the checkbox's position. If not set, the checkbox will be centered on X axis.
+        y (int, optional): The y-coordinate of the checkbox's position. If not set, the checkbox will be centered on Y axis.
+        checked (bool, optional): The initial state of the checkbox. Defaults to False.
+        variant (Variants, optional): The variant of the checkbox. Defaults to Variants.DEFAULT.
+        reverse (bool, optional): Whether to reverse the checkbox's color. Defaults to False.
+        auto_render (bool, optional): Whether to automatically render the checkbox. Defaults to True.
+    """
+
+    def __init__(self, app, text=None, x=None, y=None, checked=False, variant: Variants = Variants.DEFAULT, reverse=False, auto_render=True):
         self.app = app 
         
         self.text = text if text else ""

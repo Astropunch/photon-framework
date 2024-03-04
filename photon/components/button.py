@@ -7,7 +7,20 @@ from .. import utils
 import curses
 
 class Button(Page):
-    def __init__(self, app, text = None, x = None, y = None, variant: Variants = Variants.PRIMARY, on_click: callable = None, auto_render = True):
+    """
+    Represents a button component in the application.
+
+    Args:
+        app (Photon): The parent application object.
+        text (str): The text to be displayed on the button.
+        x (int): The x-coordinate of the button's position. If not set, the button will be centered on X axis.
+        y (int): The y-coordinate of the button's position. If not set, the button will be centered on Y axis.
+        variant (Variants): The variant of the button (e.g., PRIMARY, SECONDARY, etc.).
+        on_click (callable): The function to be called when the button is clicked.
+        auto_render (bool): Determines whether the button should be automatically rendered.
+    """
+
+    def __init__(self, app, text=None, x=None, y=None, variant: Variants = Variants.PRIMARY, on_click: callable = None, auto_render=True):
         self.app = app
         self.text = text
         self.x = x
