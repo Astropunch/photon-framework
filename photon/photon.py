@@ -131,6 +131,12 @@ class Photon:
             self.em.call("on_input", key)
             
             try:
+                if type(self.root) != None:
+                    self.root.on_input(key)
+            except Exception as e:
+                self.em.call("on_error", self, f"INPUT ERROR: (root) {e}")
+            
+            try:
                 if type(self.page).__base__ == Page:
                     self.page.on_input(key)
                 else:

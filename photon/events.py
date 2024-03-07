@@ -17,5 +17,8 @@ class EventManager:
         return decorator
     
     def call(self, event:str, *args, **kwargs):
-        if self.events[event] != None:
-            self.events[event](*args, **kwargs)
+        try:
+            if self.events[event] != None:
+                self.events[event](*args, **kwargs)
+        except Exception as error:
+            print(f"EventManager.call({event}): {error}")
