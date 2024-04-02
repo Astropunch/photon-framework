@@ -38,7 +38,7 @@ def translate_pml(path):
             if file.endswith(".pml"):
                 print(f"TASK: Parsing {root}\\{file}")
                 with open(f"{root}/{file}", "r") as pml:
-                    data = tr.convert(pml.read())
+                    data = tr.convert(pml.read(), file)
                     out.append(data)
                     
     return out

@@ -8,17 +8,25 @@ from ..ext.object import Obj
 
 class Translater:
     def __init__(self):
-        
         self.variables = json.loads(open(f"vars.json", "r").read())
         self.data = json.loads(open(f"photon.json", "r").read())
+        
+        self.elements = {
+            "p": f'Text("$text", auto_render=False, x=$x, y=$y, reverse=$reverse, variant=Variants.DEFAULT)',
+            "h1": f'Text("$text", auto_render=False, x=$x, y=$y, reverse=$reverse, variant=Variants.PRIMARY)',
+            "h2": f'Text("$text", auto_render=False, x=$x, y=$y, reverse=$reverse, variant=Variants.PRIMARY)',
+            "h3": f'Text("$text", auto_render=False, x=$x, y=$y, reverse=$reverse, variant=Variants.PRIMARY)',
+        }
         
     def params(self, string):
         for key in self.variables:
             string = string.replace(f"${key}", self.variables[key])
         
-    def convert(self, src):
+    def convert(self, src, path):
+        _id = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(24))
         
-        output = []
+        output_head = []
+        output_body = []
         dependencies = []
         
         #parse pml (photon markup language)
@@ -26,22 +34,44 @@ class Translater:
         pml = soup.find("pml")
         
         if not pml:
-            raise Exception("Unspecified pml root element")
+            print(f"WARNING: skipping unsupported file {path}")
+            return
         
         #parse pml head and body
         head = pml.find("head")
         body = pml.find("body")
         
-        if not head or not body:
-            raise Exception("Unspecified pml head or body element")
+        if not body:
+            print(f"WARNING: skipping unsupported file {path}")
+            return
         
-        for element in head.find_all():
-            if element.name == "attach":
-                if element.get('src'):
-                    dependencies.append(element.get('src'))
+        output_head += f"""
+class Page{_id}(Page):
+    def __init__(self, app):
+        self.app = app
+        """.splitlines()
+        
+        output_body += f"""
+    def on_render(self, sc):
+        """.splitlines()
+        
+        #parse body elements
+        for element in body.find_all():
+            if self.elements.get(element.name):
+                data = self.parse_element(element)
+                output_body.append(data.body)
+                output_head.append(data.head)
+            else:
+                print(f"WARNING: skipping unsupported element <{element.name}/> in {path}")
                                 
         return Obj(
-            pageId = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(24)),
+            pageId = _id,
             dependencies = dependencies,
-            output = output
+            output = output_head + output_body
+        )
+        
+    def parse_element(el):
+        return Obj(
+            body = "",
+            head = "    pass"
         )

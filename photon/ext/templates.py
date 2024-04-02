@@ -5,7 +5,7 @@ IndexTemplate = """
     </head>
     <body>
         <h1>Hello, World!</h1>
-        <p>Photon is a simple web framework for Python.</p>
+        <p>Photon is a simple terminal ui framework for Python.</p>
     </body>
 </pml>
 """
