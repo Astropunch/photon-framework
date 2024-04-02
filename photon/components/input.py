@@ -96,8 +96,8 @@ class Input(Page):
         # draw the content
         sc.addstr(y + 1, x + 2, self.render_value, curses.color_pair(primary_bg))
 
-    def on_input(self, key):
-        key = get_key(key)
+    def on_input(self, _key):
+        key = get_key(_key)
 
         if key == "backspace":
             self.value = self.value[:-1]
@@ -108,6 +108,6 @@ class Input(Page):
                 self.callback(self.value)
                 curses.curs_set(0)
 
-        if len(key) == 1:
+        if len(key) == 1 and _key > 31:
             self.value += key
             return
