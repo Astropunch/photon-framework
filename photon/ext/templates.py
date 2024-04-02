@@ -1,9 +1,8 @@
 IndexTemplate = """
 <pml>
-    <meta>
-        <title>Index</title>
-        <script src="$lib/script.py"></script>
-    </meta>
+    <head>
+        <attach src="$lib/script.py" />
+    </head>
     <body>
         <h1>Hello, World!</h1>
         <p>Photon is a simple web framework for Python.</p>

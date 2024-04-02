@@ -16,19 +16,23 @@ Dirs = [
 Files = [
     Obj(
         path = "photon.json",
-        content = json.dumps({"name": "Photon Project", "version": "0.0.1", "author": "Unknown"}, indent=4)     
+        content = json.dumps({"name": "Photon Project", "version": "0.0.1", "author": "Unknown"}, indent=4),
+        required = True 
     ),
     Obj(
-        path = "variables.json",
-        content = json.dumps(DefaultVariables, indent=4)
+        path = "vars.json",
+        content = json.dumps(DefaultVariables, indent=4),
+        required = True
     ),
     Obj(
         path = "src/route/index.pml",
-        content = IndexTemplate
+        content = IndexTemplate,
+        required = False
     ),
     Obj(
         path = "src/lib/script.py",
-        content = ScriptTemplate
+        content = ScriptTemplate,
+        required = False
     )
 ]
 
@@ -51,4 +55,5 @@ def entry(name):
             file.write(f.content)
             
     print("Project created, get started by running")
-    print(f" python -m photon run \"{name}\"")
+    print(f" cd {name}")
+    print(" python -m photon run")

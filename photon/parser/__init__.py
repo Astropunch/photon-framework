@@ -1,4 +1,5 @@
 from . import commands
+import traceback
 
 class Parser:
     def __init__(self, args):
@@ -27,6 +28,7 @@ class Parser:
                     if out:
                         print(f"{command.name.upper()}: {out}")
                 except Exception as error:
+                    traceback.print_exc()
                     print(f"Error: failed to run command '{command.name}'\n>>> {error}")
                     
                 return
